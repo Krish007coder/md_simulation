@@ -1,0 +1,18 @@
+# Python cache files
+__pycache__/
+*.pyc
+*.pyo
+
+#Anaconda environment files
+*.egg-info/ 
+
+# VS Code settings
+.vscode/
+
+# Output files (generated , not source)
+output/*.png 
+output/*.csv 
+output/*.npy
+
+# macOS metadata
+.DS_Store
