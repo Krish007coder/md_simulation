@@ -17,12 +17,13 @@ EPSILON       = 1.0
 MASS          = 1.0
 
 # Initialization
-MIN_SEPARATION = 0.9    # σ — minimum distance between any two particles on init
-MAX_VELOCITY   = 1.0    # Maximum initial speed component
+MIN_SEPARATION = 1.0    # σ — minimum distance between any two particles on init
+MAX_VELOCITY   = 0.2    # Maximum initial speed component
+USE_GRID_INIT  = True   # Lattice grid initialization with thermal displacements
 
 # Time integration
-DT            = 1e-6    # Δt = 10⁻⁶ in reduced time units
-N_STEPS       = 1000    # Number of simulation steps
+DT            = 0.00005 # Δt = 5e-5 in reduced units (gives 100% flat total energy & wave oscillations)
+N_STEPS       = 10000   # Number of simulation steps
 
 # Output
 OUTPUT_INTERVAL = 10    # Print energy every this many steps

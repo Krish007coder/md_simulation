@@ -12,9 +12,42 @@ Functions:
     bootstrap_prev_positions — Create ghost r(−Δt) for step 0
     verlet_step              — Advance positions by one timestep
     estimate_velocities      — Compute velocities from positions
+    velocity_verlet_step_1   — Velocity Verlet half-step 1
+    velocity_verlet_step_2   — Velocity Verlet half-step 2
 """
 
 import numpy as np
+
+
+def velocity_verlet_step_1(
+    positions: "np.ndarray",
+    velocities: "np.ndarray",
+    forces: "np.ndarray",
+    dt: float,
+    box
+) -> "tuple[np.ndarray, np.ndarray]":
+    """
+    First half of Velocity Verlet algorithm.
+
+    v(t + Δt/2) = v(t) + (1/2) F(t) Δt
+    r(t + Δt)   = r(t) + v(t + Δt/2) Δt
+    """
+    vel_half = velocities + 0.5 * forces * dt
+    pos_new  = (positions + vel_half * dt) % box.L
+    return pos_new, vel_half
+
+
+def velocity_verlet_step_2(
+    vel_half: "np.ndarray",
+    forces_new: "np.ndarray",
+    dt: float
+) -> "np.ndarray":
+    """
+    Second half of Velocity Verlet algorithm.
+
+    v(t + Δt) = v(t + Δt/2) + (1/2) F(t + Δt) Δt
+    """
+    return vel_half + 0.5 * forces_new * dt
 
 
 def bootstrap_prev_positions(

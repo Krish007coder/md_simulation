@@ -11,6 +11,32 @@ Functions:
 import numpy as np
 
 
+def init_positions_grid(N: int, box, disp_amplitude: float = 0.15) -> "np.ndarray":
+    """
+    Place N particles on a 3D simple cubic lattice with small random thermal displacements.
+
+    Prevents particle overlaps at initialization while creating natural thermal vibrations
+    that produce clear, wave-like oscillating ups-and-downs in Kinetic & Potential Energy.
+    """
+    n_side = int(np.ceil(N ** (1/3)))
+    spacing = box.L / n_side
+    positions = []
+    np.random.seed(42)
+    for ix in range(n_side):
+        for iy in range(n_side):
+            for iz in range(n_side):
+                if len(positions) < N:
+                    disp = np.random.uniform(-disp_amplitude, disp_amplitude, size=3)
+                    pos_i = [
+                        ((ix + 0.5) * spacing + disp[0]) % box.L,
+                        ((iy + 0.5) * spacing + disp[1]) % box.L,
+                        ((iz + 0.5) * spacing + disp[2]) % box.L
+                    ]
+                    positions.append(pos_i)
+    print(f"  Placed {N} particles on {n_side}x{n_side}x{n_side} lattice with thermal vibrations...")
+    return np.array(positions, dtype=np.float64)
+
+
 def init_positions(N: int, box, min_sep: float) -> "np.ndarray":
     """
     Place N particles in the box using rejection sampling.
@@ -45,7 +71,9 @@ def init_positions(N: int, box, min_sep: float) -> "np.ndarray":
             else:
                 too_close = False
                 for j in range(i):
-                    if np.linalg.norm(candidate - positions[j]) < min_sep:
+                    disp = candidate - positions[j]
+                    disp = disp - box.L * np.round(disp / box.L)
+                    if np.linalg.norm(disp) < min_sep:
                         too_close = True
                         break
                 if not too_close:
